@@ -3,8 +3,8 @@
 <body><canvas id="c" width="1920" height="1080"></canvas>
 <script src="logos.js"></script>
 <script>
-const W = 1920, H = 1080, TOTAL = 97;
-const LOGO_V = new Image(), LOGO_H = new Image(); LOGO_V.src = window.LOGO_V_SRC; LOGO_H.src = window.LOGO_H_SRC;
+const W = 1920, H = 1080, TOTAL = 102;
+const LOGO_V = new Image(), LOGO_H = new Image(), CAMB = new Image(); CAMB.onerror = () => {}; CAMB.src = window.CAMB_SRC || ''; LOGO_V.src = window.LOGO_V_SRC; LOGO_H.src = window.LOGO_H_SRC;
 window.assetsReady = Promise.all([LOGO_V, LOGO_H].map(im => im.decode()));
 const c = document.getElementById('c'), ctx = c.getContext('2d');
 const F = 'Inter, "DejaVu Sans", sans-serif';
@@ -391,12 +391,48 @@ function star(x, y, r, col) { ctx.beginPath(); for (let i = 0; i < 10; i++) { co
 function wave(t, k) { return [2.6 + Math.sin(t * 4 + k) * .3, 3.0]; }
 
 
+// Science HUB loqosu (çəkilmiş)
+function hubLogo(cx, cy, size, t) {
+  const k = size / 380; ctx.save(); ctx.translate(cx, cy); ctx.scale(k, k);
+  const g = ctx.createLinearGradient(-190, -190, 190, 190); g.addColorStop(0, '#0b1a3a'); g.addColorStop(1, '#173a80');
+  rr(-190, -190, 380, 380, 40); ctx.fillStyle = g; ctx.fill(); ctx.strokeStyle = '#22c3ee'; ctx.lineWidth = 6; ctx.stroke();
+  ctx.save(); ctx.translate(0, -60); for (let i = 0; i < 3; i++) { ctx.save(); ctx.rotate(i * Math.PI / 3); ctx.beginPath(); ctx.ellipse(0, 0, 95, 32, 0, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = 6; ctx.stroke(); const a = t * 3 + i * 2; circle(Math.cos(a) * 95, Math.sin(a) * 32, 10, ['#22c3ee', '#f59e0b', '#22c55e'][i]); ctx.restore(); } circle(0, 0, 22, '#22c3ee'); ctx.restore();
+  ctx.font = `800 34px ${F}`; ctx.letterSpacing = '10px'; text('SCIENCE', 6, 62, 34, '#93c5fd', 800); ctx.letterSpacing = '0px';
+  const tg = ctx.createLinearGradient(-110, 0, 110, 0); tg.addColorStop(0, '#22c3ee'); tg.addColorStop(.5, '#facc15'); tg.addColorStop(1, '#22c55e');
+  ctx.font = `900 100px ${F}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = tg; ctx.fillText('HUB', 0, 126);
+  ctx.restore();
+}
+function cambridgeCard(x, y, w, h) {
+  ctx.fillStyle = '#fff'; rr(x, y, w, h, 28); ctx.fill();
+  if (CAMB.complete && CAMB.naturalWidth) { const lw = w - 60, lh = lw * CAMB.height / CAMB.width; ctx.drawImage(CAMB, x + 30, y + (h - lh) / 2, lw, lh); return; }
+  text('Cambridge Assessment', x + w / 2, y + h / 2 - 62, 40, '#111827', 800); text('International Education', x + w / 2, y + h / 2 - 12, 35, '#111827', 500);
+  line(x + 50, y + h / 2 + 34, x + w - 50, y + h / 2 + 34, '#9ca3af', 2); text('Cambridge International School', x + w / 2, y + h / 2 + 78, 30, '#111827', 500);
+}
 function sKaspi(t, lt) {
-  const g = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, 1100); g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#dbeafe'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-  const p = back(prog(lt, .1, .8)), lh = 560, lw = lh * LOGO_V.width / LOGO_V.height;
-  ctx.save(); ctx.translate(W / 2, 470); ctx.scale(p, p); ctx.globalAlpha = clamp(p); ctx.drawImage(LOGO_V, -lw / 2, -lh / 2, lw, lh); ctx.restore();
-  const q = eOut(prog(lt, .9, 1.4)); text('təqdim edir', W / 2, 860 + (1 - q) * 30, 60, '#0057a6', 700, 'center', q);
-  const o = prog(lt, 2.6, 3); if (o > 0) { ctx.fillStyle = `rgba(10,15,36,${o})`; ctx.fillRect(0, 0, W, H); }
+  ctx.fillStyle = '#060a1a'; ctx.fillRect(0, 0, W, H);
+  // fırlanan işıq şüaları
+  ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(lt * .25); for (let i = 0; i < 12; i++) { ctx.rotate(Math.PI / 6); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(1400, -110); ctx.lineTo(1400, 110); ctx.closePath(); ctx.fillStyle = `rgba(56,189,248,${.05 * prog(lt, 0, .6)})`; ctx.fill(); } ctx.restore();
+  const cg = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, 800); cg.addColorStop(0, 'rgba(34,195,238,.25)'); cg.addColorStop(1, 'rgba(34,195,238,0)'); ctx.fillStyle = cg; ctx.fillRect(0, 0, W, H);
+  for (const q of parts) circle(q.x, (q.y - t * q.v * 3) % H + (q.y - t * q.v * 3 < 0 ? H : 0), q.r, `rgba(255,255,255,${.25 + .15 * Math.sin(t * 3 + q.p)})`);
+  const cards = [[280, 340, .1], [680, 560, .45], [1300, 380, .8]], cy = 520, ch = 380;
+  cards.forEach(([x, w, t0], k) => {
+    const p = prog(lt, t0, t0 + .55); if (p <= 0) return; const e = back(p);
+    // partlayış halqası
+    if (p < 1) { ctx.beginPath(); ctx.arc(x + w / 2, cy, 120 + p * 420, 0, Math.PI * 2); ctx.strokeStyle = `rgba(255,255,255,${.5 * (1 - p)})`; ctx.lineWidth = 5; ctx.stroke(); }
+    ctx.save(); ctx.globalAlpha = clamp(p * 2); ctx.translate(x + w / 2, cy + (1 - e) * 160); ctx.rotate((1 - e) * (k - 1) * .25); ctx.translate(-(x + w / 2), -cy);
+    ctx.shadowColor = 'rgba(34,195,238,.55)'; ctx.shadowBlur = 50;
+    if (k === 0) { ctx.fillStyle = '#fff'; rr(x, cy - ch / 2, w, ch, 28); ctx.fill(); ctx.shadowBlur = 0; const lh = 310, lw = lh * LOGO_V.width / LOGO_V.height; ctx.drawImage(LOGO_V, x + (w - lw) / 2, cy - lh / 2, lw, lh); }
+    if (k === 1) { cambridgeCard(x, cy - ch / 2, w, ch); }
+    if (k === 2) { ctx.shadowBlur = 60; hubLogo(x + w / 2, cy, ch, t); }
+    ctx.restore();
+    // parıltı keçidi
+    const sp = prog(lt, 1.5 + k * .12, 2.1 + k * .12); if (sp > 0 && sp < 1) { ctx.save(); rr(x, cy - ch / 2, w, ch, 28); ctx.clip(); const sx = x - 200 + sp * (w + 400); const sg = ctx.createLinearGradient(sx - 120, 0, sx + 120, 0); sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(.5, 'rgba(255,255,255,.6)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = sg; ctx.fillRect(sx - 120, cy - ch / 2, 240, ch); ctx.restore(); }
+  });
+  // kartlar arasında işıqlı ayırıcılar
+  [650, 1270].forEach((x, k) => { const p = prog(lt, .9 + k * .1, 1.3 + k * .1); if (p <= 0) return; const g = ctx.createLinearGradient(0, cy - 160, 0, cy + 160); g.addColorStop(0, 'rgba(34,195,238,0)'); g.addColorStop(.5, `rgba(250,204,21,${p})`); g.addColorStop(1, 'rgba(34,195,238,0)'); ctx.fillStyle = g; ctx.fillRect(x - 2, cy - 160 * p, 4, 320 * p); });
+  // alt işıq xətti
+  const lp = eOut(prog(lt, 1.2, 1.9)); if (lp > 0) { const g = ctx.createLinearGradient(W / 2 - 700, 0, W / 2 + 700, 0); g.addColorStop(0, 'rgba(34,195,238,0)'); g.addColorStop(.5, '#22c3ee'); g.addColorStop(1, 'rgba(34,195,238,0)'); ctx.fillStyle = g; ctx.fillRect(W / 2 - 700 * lp, cy + ch / 2 + 50, 1400 * lp, 4); }
+  const o = prog(lt, 2.7, 3); if (o > 0) { ctx.fillStyle = `rgba(255,255,255,${o * .9})`; ctx.fillRect(0, 0, W, H); }
 }
 function sSoon(t, lt) {
   bg(t, '#22c3ee');
@@ -410,6 +446,21 @@ function sWhat(t, lt) {
   bg(t, '#a855f7');
   popText('Nədir?', W / 2, 300, 160, '#c084fc', 0, lt, 900);
   lines(['Şagird Elmi Araşdırmalar', 'və İnkişaf Mərkəzi'], 560, 120, 100, '#fff', .8, lt, 900);
+}
+
+function sHUB(t, lt) {
+  bg(t, '#22c3ee');
+  lines(['HUB nə deməkdir?'], 150, 0, 84, '#fff', 0, lt, 900);
+  const L = [['H', 'Hypothesis', 'Hipotez', '#22c3ee', 400], ['U', 'Understanding', 'Anlama', '#f59e0b', 960], ['B', 'Building', 'Yaratma, qurma', '#22c55e', 1520]];
+  L.forEach(([ch, en, az, col, x], k) => {
+    const t0 = .5 + k * 1.1, p = back(prog(lt, t0, t0 + .5)); if (p <= 0) return;
+    const g = ctx.createRadialGradient(x, 450, 0, x, 450, 260); g.addColorStop(0, hexA(col, .3 * clamp(p))); g.addColorStop(1, hexA(col, 0)); ctx.fillStyle = g; ctx.fillRect(x - 260, 190, 520, 520);
+    ctx.save(); ctx.translate(x, 450); ctx.scale(p, p); text(ch, 0, 0, 300, col, 900); ctx.restore();
+    const q = eOut(prog(lt, t0 + .3, t0 + .8));
+    text(en, x, 680 + (1 - q) * 30, 56, '#fff', 800, 'center', q);
+    text(az, x, 750 + (1 - q) * 30, 46, col, 700, 'center', q);
+  });
+  const f = prog(lt, 4.0, 4.5); if (f > 0) { text('Sual ver  →  Anla  →  Yarat', W / 2, 920, 54, '#facc15', 800, 'center', f); }
 }
 function sJoin(t, lt) {
   bg(t, '#f59e0b');
@@ -495,18 +546,18 @@ function sRule(t, lt) {
 }
 
 // timeline: [start, end, fn]
-const TL = [[0, 3, (t, l) => sKaspi(t, l)], [3, 7, (t, l) => sSoon(t, l)], [7, 11, (t, l) => sWhat(t, l)], [11, 14.5, (t, l) => sJoin(t, l)], [14.5, 18.5, (t, l) => sStudents(t, l)],
-  [18.5, 24, (t, l) => sLeader(t, l)], [24, 29.5, (t, l) => sDeputies(t, l)], [29.5, 35, (t, l) => sTeams(t, l)], [35, 42, (t, l) => sGov(t, l)], [42, 46, (t, l) => sRule(t, l)], [46, 50, (t, l) => sLogo(t, l)]];
-const D0 = 50;
+const TL = [[0, 3, (t, l) => sKaspi(t, l)], [3, 7, (t, l) => sSoon(t, l)], [7, 11, (t, l) => sWhat(t, l)], [11, 16, (t, l) => sHUB(t, l)], [16, 19.5, (t, l) => sJoin(t, l)], [19.5, 23.5, (t, l) => sStudents(t, l)],
+  [23.5, 29, (t, l) => sLeader(t, l)], [29, 34.5, (t, l) => sDeputies(t, l)], [34.5, 40, (t, l) => sTeams(t, l)], [40, 47, (t, l) => sGov(t, l)], [47, 51, (t, l) => sRule(t, l)], [51, 55, (t, l) => sLogo(t, l)]];
+const D0 = 55;
 for (let i = 0; i < 6; i++) TL.push([D0 + i * 5, D0 + 5 + i * 5, (t, l) => sDept(t, l, i)]);
-TL.push([80, 85, (t, l) => sYou(t, l)], [85, 89, (t, l) => sGrade(t, l)], [89, 97, (t, l) => sCTA(t, l)]);
+TL.push([85, 90, (t, l) => sYou(t, l)], [90, 94, (t, l) => sGrade(t, l)], [94, 102, (t, l) => sCTA(t, l)]);
 
 function render(t) {
   for (const [a, b, fn] of TL) if (t >= a && t < b) { ctx.save(); fn(t, t - a); ctx.restore(); break; }
   // fade between non-dept scenes
   for (const [a] of TL) { const d = Math.abs(t - a); if (a > 0 && d < .15 && !(a >= D0 && a < D0 + 30)) { ctx.fillStyle = `rgba(10,15,36,${1 - d / .15})`; ctx.fillRect(0, 0, W, H); } }
   // Kaspi Liseyi loqosu küncdə
-  const wa = prog(t, 3.3, 3.9) * (1 - prog(t, 96.2, 97)); if (wa > 0) { const lh = 50, lw = lh * LOGO_H.width / LOGO_H.height; ctx.save(); ctx.globalAlpha = wa; ctx.fillStyle = '#fff'; rr(36, 32, lw + 40, lh + 28, 20); ctx.fill(); ctx.drawImage(LOGO_H, 56, 46, lw, lh); ctx.restore(); }
+  const wa = prog(t, 3.3, 3.9) * (1 - prog(t, 101.2, 102)); if (wa > 0) { const lh = 50, lw = lh * LOGO_H.width / LOGO_H.height; ctx.save(); ctx.globalAlpha = wa; ctx.fillStyle = '#fff'; rr(36, 32, lw + 40, lh + 28, 20); ctx.fill(); ctx.drawImage(LOGO_H, 56, 46, lw, lh); ctx.restore(); }
   const fi = 1 - prog(t, 0, .4); if (fi > 0) { ctx.fillStyle = `rgba(0,0,0,${fi})`; ctx.fillRect(0, 0, W, H); }
 }
 window.render = render; window.TOTAL = TOTAL;

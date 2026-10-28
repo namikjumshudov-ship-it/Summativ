@@ -1,6 +1,6 @@
 # Bölmələrə görə ritmi dəyişən fon musiqisi (120 BPM, 16-lıq addım sekvenseri)
 import numpy as np, wave
-SR = 44100; T = 97; STEP = 0.125           # 120 BPM-də 16-lıq not
+SR = 44100; T = 102; STEP = 0.125           # 120 BPM-də 16-lıq not
 N = SR * T; L = np.zeros(N); R = np.zeros(N)
 rng = np.random.default_rng(3)
 
@@ -49,8 +49,8 @@ PROG_B = [[57, 60, 64], [53, 57, 60], [60, 64, 67], [55, 59, 62]]   # Am F C G
 PROG_F = [[53, 57, 60], [55, 59, 62], [57, 60, 64], [57, 60, 64]]   # F G Am Am
 
 def section(t):
-    for a, b, name in [(0, 3, 'intro'), (3, 14.5, 'A'), (14.5, 35, 'B'), (35, 42, 'C'), (42, 46, 'D'),
-                       (46, 80, 'E'), (80, 89, 'F'), (89, 96, 'G'), (96, 97, 'end')]:
+    for a, b, name in [(0, 3, 'intro'), (3, 19.5, 'A'), (19.5, 40, 'B'), (40, 47, 'C'), (47, 51, 'D'),
+                       (51, 85, 'E'), (85, 94, 'F'), (94, 101, 'G'), (101, 102, 'end')]:
         if a <= t < b: return name, t - a
     return 'end', 0
 
@@ -90,7 +90,7 @@ for i in range(int(T / STEP)):
         if st % 4 == 2: add(hat(True), t, pan=.3, gain=.55)
         else: add(hat(), t, pan=-.2, gain=.35)
         if st % 2 == 0: add(tone(mid(root + (12 if st % 4 == 2 else 0)), .22, 'saw', d=.12), t, gain=.2)
-        lead = LEADS[min(5, max(0, int((t - 50) // 5)))] if t >= 50 else 'saw'
+        lead = LEADS[min(5, max(0, int((t - 55) // 5)))] if t >= 55 else 'saw'
         mel = [ch[2] + 12, None, ch[1] + 12, None, ch[2] + 12, ch[0] + 24, None, ch[2] + 12, ch[1] + 12, None, ch[0] + 12, None, ch[1] + 12, None, ch[2] + 12, None]
         if bar % 2 == 1 and mel[st]: add(tone(mid(mel[st]), .25, lead, d=.16, a=.008), t, pan=.15, gain=.06)
     elif sec == 'F':        # yarım temp hip-hop
@@ -106,10 +106,10 @@ for i in range(int(T / STEP)):
         add(tone(mid([ch[0], ch[1], ch[2], ch[0] + 12][st % 4] + 12), STEP, 'sq', d=.08), t, pan=(.4 if st % 2 else -.4), gain=.06)
 
 # riser + keçid zərbələri
-n = int(4 * SR); tt = np.arange(n) / SR; add(rng.standard_normal(n) * (tt / 4) ** 2 * .25, 42)
-for at, g in ((3, .9), (14.5, .5), (35, .6), (46, 1.3), (80, .8), (89, 1.2), (96, 1.3)):
+n = int(4 * SR); tt = np.arange(n) / SR; add(rng.standard_normal(n) * (tt / 4) ** 2 * .25, 47)
+for at, g in ((0.1, .7), (0.45, .7), (0.8, .8), (3, .9), (11, .6), (11.5, .5), (12.6, .5), (13.7, .5), (19.5, .5), (40, .6), (51, 1.3), (85, .8), (94, 1.2), (101, 1.3)):
     add(kick(1.2), at, gain=g); n = int(1.6 * SR); tt = np.arange(n) / SR; add(rng.standard_normal(n) * np.exp(-tt * 2.5) * .12 * g, at)
-add(tone(mid(48), 1.0, 'bell', d=1.2), 96, gain=.15); [add(tone(mid(m), 1.0, 'saw', d=.6), 96, gain=.04) for m in (60, 64, 67, 72)]
+add(tone(mid(48), 1.0, 'bell', d=1.2), 101, gain=.15); [add(tone(mid(m), 1.0, 'saw', d=.6), 101, gain=.04) for m in (60, 64, 67, 72)]
 
 mix = np.stack([L, R], 1)
 fade = np.ones(N); fi = int(.4 * SR); fade[:fi] = np.linspace(0, 1, fi); fo = int(1.0 * SR); fade[-fo:] = np.linspace(1, 0, fo)
