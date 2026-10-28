@@ -1,8 +1,11 @@
 <!doctype html>
 <html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000}canvas{display:block}</style></head>
 <body><canvas id="c" width="1920" height="1080"></canvas>
+<script src="logos.js"></script>
 <script>
-const W = 1920, H = 1080, TOTAL = 94;
+const W = 1920, H = 1080, TOTAL = 97;
+const LOGO_V = new Image(), LOGO_H = new Image(); LOGO_V.src = window.LOGO_V_SRC; LOGO_H.src = window.LOGO_H_SRC;
+window.assetsReady = Promise.all([LOGO_V, LOGO_H].map(im => im.decode()));
 const c = document.getElementById('c'), ctx = c.getContext('2d');
 const F = 'Inter, "DejaVu Sans", sans-serif';
 
@@ -387,6 +390,14 @@ function pill(s, x, y, size, col, alpha = 1) {
 function star(x, y, r, col) { ctx.beginPath(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rad = i % 2 ? r * .45 : r; ctx.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad); } ctx.closePath(); ctx.fillStyle = col; ctx.fill(); }
 function wave(t, k) { return [2.6 + Math.sin(t * 4 + k) * .3, 3.0]; }
 
+
+function sKaspi(t, lt) {
+  const g = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, 1100); g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#dbeafe'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  const p = back(prog(lt, .1, .8)), lh = 560, lw = lh * LOGO_V.width / LOGO_V.height;
+  ctx.save(); ctx.translate(W / 2, 470); ctx.scale(p, p); ctx.globalAlpha = clamp(p); ctx.drawImage(LOGO_V, -lw / 2, -lh / 2, lw, lh); ctx.restore();
+  const q = eOut(prog(lt, .9, 1.4)); text('təqdim edir', W / 2, 860 + (1 - q) * 30, 60, '#0057a6', 700, 'center', q);
+  const o = prog(lt, 2.6, 3); if (o > 0) { ctx.fillStyle = `rgba(10,15,36,${o})`; ctx.fillRect(0, 0, W, H); }
+}
 function sSoon(t, lt) {
   bg(t, '#22c3ee');
   for (let i = 0; i < 3; i++) { const q = prog(lt, .2 + i * .25, 1.6 + i * .25); if (q > 0 && q < 1) { ctx.beginPath(); ctx.arc(W / 2, 300, 100 + q * 800, 0, Math.PI * 2); ctx.strokeStyle = `rgba(255,255,255,${.35 * (1 - q)})`; ctx.lineWidth = 6; ctx.stroke(); } }
@@ -484,17 +495,19 @@ function sRule(t, lt) {
 }
 
 // timeline: [start, end, fn]
-const TL = [[0, 4, (t, l) => sSoon(t, l)], [4, 8, (t, l) => sWhat(t, l)], [8, 11.5, (t, l) => sJoin(t, l)], [11.5, 15.5, (t, l) => sStudents(t, l)],
-  [15.5, 21, (t, l) => sLeader(t, l)], [21, 26.5, (t, l) => sDeputies(t, l)], [26.5, 32, (t, l) => sTeams(t, l)], [32, 39, (t, l) => sGov(t, l)], [39, 43, (t, l) => sRule(t, l)], [43, 47, (t, l) => sLogo(t, l)]];
-const D0 = 47;
+const TL = [[0, 3, (t, l) => sKaspi(t, l)], [3, 7, (t, l) => sSoon(t, l)], [7, 11, (t, l) => sWhat(t, l)], [11, 14.5, (t, l) => sJoin(t, l)], [14.5, 18.5, (t, l) => sStudents(t, l)],
+  [18.5, 24, (t, l) => sLeader(t, l)], [24, 29.5, (t, l) => sDeputies(t, l)], [29.5, 35, (t, l) => sTeams(t, l)], [35, 42, (t, l) => sGov(t, l)], [42, 46, (t, l) => sRule(t, l)], [46, 50, (t, l) => sLogo(t, l)]];
+const D0 = 50;
 for (let i = 0; i < 6; i++) TL.push([D0 + i * 5, D0 + 5 + i * 5, (t, l) => sDept(t, l, i)]);
-TL.push([77, 82, (t, l) => sYou(t, l)], [82, 86, (t, l) => sGrade(t, l)], [86, 94, (t, l) => sCTA(t, l)]);
+TL.push([80, 85, (t, l) => sYou(t, l)], [85, 89, (t, l) => sGrade(t, l)], [89, 97, (t, l) => sCTA(t, l)]);
 
 function render(t) {
   for (const [a, b, fn] of TL) if (t >= a && t < b) { ctx.save(); fn(t, t - a); ctx.restore(); break; }
   // fade between non-dept scenes
   for (const [a] of TL) { const d = Math.abs(t - a); if (a > 0 && d < .15 && !(a >= D0 && a < D0 + 30)) { ctx.fillStyle = `rgba(10,15,36,${1 - d / .15})`; ctx.fillRect(0, 0, W, H); } }
-  const fi = 1 - prog(t, 0, .6); if (fi > 0) { ctx.fillStyle = `rgba(0,0,0,${fi})`; ctx.fillRect(0, 0, W, H); }
+  // Kaspi Liseyi loqosu küncdə
+  const wa = prog(t, 3.3, 3.9) * (1 - prog(t, 96.2, 97)); if (wa > 0) { const lh = 50, lw = lh * LOGO_H.width / LOGO_H.height; ctx.save(); ctx.globalAlpha = wa; ctx.fillStyle = '#fff'; rr(36, 32, lw + 40, lh + 28, 20); ctx.fill(); ctx.drawImage(LOGO_H, 56, 46, lw, lh); ctx.restore(); }
+  const fi = 1 - prog(t, 0, .4); if (fi > 0) { ctx.fillStyle = `rgba(0,0,0,${fi})`; ctx.fillRect(0, 0, W, H); }
 }
 window.render = render; window.TOTAL = TOTAL;
 render(0);

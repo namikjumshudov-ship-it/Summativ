@@ -11,6 +11,7 @@ const fs = require('fs');
   page.on('pageerror', e => console.error('PAGE ERROR', e.message));
   await page.goto('file://' + path.join(__dirname, 'index.html'));
   await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(() => window.assetsReady);
   const frame = async (t, q = 0.92) => {
     const url = await page.evaluate(([t, q]) => { render(t); return document.getElementById('c').toDataURL('image/jpeg', q); }, [t, q]);
     return Buffer.from(url.split(',')[1], 'base64');
