@@ -2,7 +2,7 @@
 <html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000}canvas{display:block}</style></head>
 <body><canvas id="c" width="1920" height="1080"></canvas>
 <script>
-const W = 1920, H = 1080, TOTAL = 60;
+const W = 1920, H = 1080, TOTAL = 94;
 const c = document.getElementById('c'), ctx = c.getContext('2d');
 const F = 'Inter, "DejaVu Sans", sans-serif';
 
@@ -315,8 +315,8 @@ function sLogo(t, lt) {
   for (let i = 0; i < 3; i++) { const q = prog(lt, i * .2, 1.4 + i * .2); if (q > 0 && q < 1) { ctx.beginPath(); ctx.arc(W / 2, 380, 100 + q * 700, 0, Math.PI * 2); ctx.strokeStyle = `rgba(255,255,255,${.4 * (1 - q)})`; ctx.lineWidth = 6; ctx.stroke(); } }
   atom(W / 2, 380, 1.3 * p, t);
   popText('KASPI SCIENCE HUB', W / 2, 640, 120, '#fff', .5, lt, 900);
-  const sp = prog(lt, 1.0, 1.6); text('Şagird Elmi Araşdırmalar və İnnovasiya Mərkəzi', W / 2, 740 + (1 - eOut(sp)) * 30, 46, '#cbd5e1', 500, 'center', sp);
-  popText('6 istiqamət · 1 komanda', W / 2, 870, 64, '#facc15', 1.8, lt, 800);
+  const sp = prog(lt, 1.0, 1.6); text('Şagird Elmi Araşdırmalar və İnkişaf Mərkəzi', W / 2, 740 + (1 - eOut(sp)) * 30, 46, '#cbd5e1', 500, 'center', sp);
+  popText('6 şöbə · 1 komanda', W / 2, 870, 64, '#facc15', 1.8, lt, 800);
 }
 function sDept(t, lt, i) {
   const d = DEPTS[i];
@@ -368,21 +368,132 @@ function sCTA(t, lt) {
   atom(W / 2, 250, .7 * back(prog(lt, .2, .9)), t);
   popText('QOŞUL!', W / 2, 470, 210, '#facc15', .4, lt, 900);
   popText('KASPI SCIENCE HUB', W / 2, 640, 84, '#fff', .9, lt, 900);
-  const p = prog(lt, 1.5, 2.1); text('Ərizəni doldur  ·  Müəllim-rəhbərə yaxınlaş', W / 2, 760, 46, '#cbd5e1', 600, 'center', p);
+  const p = prog(lt, 1.5, 2.1); text('Müraciət et: direktor, müavin və ya komanda üzvü ol', W / 2, 760, 46, '#cbd5e1', 600, 'center', p);
   const q = prog(lt, 2.4, 3.0); ctx.save(); ctx.globalAlpha = q; ctx.fillStyle = hexA('#facc15', .15); rr(W / 2 - 470, 840, 940, 100, 50); ctx.fill(); ctx.strokeStyle = '#facc15'; ctx.lineWidth = 4; ctx.stroke(); ctx.restore();
   text('Gələcək səninlə başlayır.', W / 2, 891, 54, '#fff', 800, 'center', q);
   const fo = prog(lt, 6.2, 7); if (fo > 0) { ctx.fillStyle = `rgba(0,0,0,${fo})`; ctx.fillRect(0, 0, W, H); }
 }
 
+
+// ---------- açılış: elan və sual-cavablar ----------
+const CROWD = [{ skin: 0, hair: '#3b2416' }, { skin: 2, hair: '#111827', girl: true }, { skin: 1, hair: '#1f2937' }, { skin: 3, hair: '#92400e', girl: true }, { skin: 0, hair: '#111827' }, { skin: 2, hair: '#78350f', girl: true }, { skin: 1, hair: '#7f1d1d' }, { skin: 3, hair: '#3b2416', girl: true }];
+function lines(arr, y0, lh, size, col, t0, lt, weight = 800) {
+  arr.forEach((s, k) => { const p = eOut(prog(lt, t0 + k * .25, t0 + k * .25 + .6)); if (p <= 0) return; text(s, W / 2, y0 + k * lh + (1 - p) * 40, size, col, weight, 'center', p); });
+}
+function pill(s, x, y, size, col, alpha = 1) {
+  ctx.save(); ctx.globalAlpha *= alpha; ctx.font = `800 ${size}px ${F}`; const w = ctx.measureText(s).width + size * 1.4;
+  ctx.fillStyle = col; rr(x - w / 2, y - size * .9, w, size * 1.8, size * .9); ctx.fill(); text(s, x, y + 1, size, '#0a0f24', 800); ctx.restore();
+}
+function star(x, y, r, col) { ctx.beginPath(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rad = i % 2 ? r * .45 : r; ctx.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad); } ctx.closePath(); ctx.fillStyle = col; ctx.fill(); }
+function wave(t, k) { return [2.6 + Math.sin(t * 4 + k) * .3, 3.0]; }
+
+function sSoon(t, lt) {
+  bg(t, '#22c3ee');
+  for (let i = 0; i < 3; i++) { const q = prog(lt, .2 + i * .25, 1.6 + i * .25); if (q > 0 && q < 1) { ctx.beginPath(); ctx.arc(W / 2, 300, 100 + q * 800, 0, Math.PI * 2); ctx.strokeStyle = `rgba(255,255,255,${.35 * (1 - q)})`; ctx.lineWidth = 6; ctx.stroke(); } }
+  atom(W / 2, 300, 1.1 * back(prog(lt, 0, .8)), t);
+  popText('KASPI SCIENCE HUB', W / 2, 530, 120, '#fff', .4, lt, 900);
+  const p = back(prog(lt, 1.1, 1.6)); if (p > 0) { ctx.save(); ctx.translate(W / 2, 680); ctx.rotate(-.04); ctx.scale(p, p); pill('TEZLİKLƏ', 0, 0, 72, '#facc15'); ctx.restore(); }
+  lines(['fəaliyyətə başlayır!'], 830, 0, 80, '#fff', 1.7, lt, 800);
+}
+function sWhat(t, lt) {
+  bg(t, '#a855f7');
+  popText('Nədir?', W / 2, 300, 160, '#c084fc', 0, lt, 900);
+  lines(['Şagird Elmi Araşdırmalar', 'və İnkişaf Mərkəzi'], 560, 120, 100, '#fff', .8, lt, 900);
+}
+function sJoin(t, lt) {
+  bg(t, '#f59e0b');
+  popText('Qoşul', W / 2, 420, 200, '#facc15', 0, lt, 900);
+  lines(['və gələcəyini qur!'], 620, 0, 110, '#fff', .5, lt, 900);
+  // raket
+  const rp = prog(lt, .9, 3.5), rx = 1560, ry = 900 - eInOut(rp) * 700;
+  if (rp > 0) { ctx.save(); ctx.translate(rx, ry); ctx.rotate(.35);
+    for (let i = 0; i < 6; i++) circle(Math.sin(t * 20 + i) * 8, 90 + i * 22, 16 - i * 2, hexA(i % 2 ? '#f97316' : '#facc15', .9 - i * .12));
+    ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.moveTo(0, -80); ctx.quadraticCurveTo(40, -30, 34, 70); ctx.lineTo(-34, 70); ctx.quadraticCurveTo(-40, -30, 0, -80); ctx.fill();
+    circle(0, -10, 16, '#22c3ee'); ctx.fillStyle = '#f97316'; ctx.beginPath(); ctx.moveTo(-34, 30); ctx.lineTo(-60, 80); ctx.lineTo(-34, 70); ctx.fill(); ctx.beginPath(); ctx.moveTo(34, 30); ctx.lineTo(60, 80); ctx.lineTo(34, 70); ctx.fill(); ctx.restore(); }
+}
+function sStudents(t, lt) {
+  bg(t, '#22c55e');
+  lines(['Burada bütün işləri'], 200, 0, 84, '#fff', 0, lt, 800);
+  popText('ŞAGİRDLƏR', W / 2, 340, 170, '#facc15', .5, lt, 900);
+  lines(['görür.'], 480, 0, 84, '#fff', .9, lt, 800);
+  for (let k = 0; k < 7; k++) { const p = back(prog(lt, 1.2 + k * .12, 1.6 + k * .12)); if (p <= 0) continue; const c = CROWD[k];
+    ctx.save(); ctx.translate(360 + k * 200, 1040); ctx.scale(p, p); person({ x: 0, y: 0, s: .95, ...c, face: k < 3 ? 1 : -1, aL: k % 2 ? wave(t, k) : [.2, .1], aR: k % 2 ? [.2, .1] : wave(t, k), bob: Math.abs(Math.sin(t * 3 + k)) * 6 }); ctx.restore(); }
+}
+function sLeader(t, lt) {
+  bg(t, '#f97316');
+  lines(['HUB-ın rəhbəri kim olacaq?'], 160, 0, 84, '#fdba74', 0, lt, 900);
+  lines(['Müraciət edən şagirdlərin', 'içərisindən seçiləcək.'], 300, 84, 68, '#fff', 1.6, lt, 700);
+  const pick = prog(lt, 2.4, 3.0);
+  if (pick > 0) { ctx.save(); ctx.globalAlpha = pick * .5; const g = ctx.createLinearGradient(0, 560, 0, 1080); g.addColorStop(0, 'rgba(250,204,21,0)'); g.addColorStop(1, 'rgba(250,204,21,.45)'); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(900, 560); ctx.lineTo(1020, 560); ctx.lineTo(1110, 1060); ctx.lineTo(810, 1060); ctx.fill(); ctx.restore(); }
+  for (let k = 0; k < 7; k++) { const p = back(prog(lt, .5 + k * .1, .9 + k * .1)); if (p <= 0) continue; const chosen = k === 3;
+    ctx.save(); ctx.globalAlpha = chosen ? 1 : 1 - pick * .55; ctx.translate(420 + k * 180, 1010); ctx.scale(p, p);
+    person({ x: 0, y: 0, s: .85, ...CROWD[k], face: k < 3 ? 1 : k > 3 ? -1 : 0, aL: chosen && pick > 0 ? wave(t, 0) : [.2, .1], aR: k === 1 || k === 5 ? [2.7, 3.0] : [.2, .1], bob: chosen ? pick * Math.abs(Math.sin(t * 3)) * 10 : 0 }); ctx.restore(); }
+  if (pick > 0) { const sp = back(pick); ctx.save(); ctx.translate(960, 760); ctx.scale(sp, sp); ctx.rotate(Math.sin(t * 2) * .1); star(0, 0, 40, '#facc15'); ctx.restore(); pill('Şagird direktor', 960, 690, 34, '#facc15', pick); }
+}
+function sDeputies(t, lt) {
+  bg(t, '#ec4899');
+  lines(['Şöbə rəhbərləri — müavinlər', 'kim olacaq?'], 150, 90, 78, '#f9a8d4', 0, lt, 900);
+  lines(['Onlar da müraciət edən şagirdlərdən seçiləcək.'], 400, 0, 58, '#fff', 1.5, lt, 700);
+  DEPTS.forEach((d, k) => { const p = back(prog(lt, 2.0 + k * .2, 2.4 + k * .2)); if (p <= 0) return; const x = 360 + k * 240;
+    ctx.save(); ctx.translate(x, 1010); ctx.scale(p, p); person({ x: 0, y: 0, s: .9, ...CROWD[k + 1], face: k < 3 ? 1 : -1, aL: [.2, .1], aR: [.2, .1], bob: Math.abs(Math.sin(t * 3 + k)) * 5 }); ctx.restore();
+    circle(x, 740, 40 * p, d.col); text(d.n, x, 742, 32 * p, '#0a0f24', 900); });
+  const lp = prog(lt, 3.4, 3.9); text('Hər şöbəyə 1 müavin', W / 2, 560, 46, '#facc15', 800, 'center', lp);
+}
+function sTeams(t, lt) {
+  bg(t, '#22c3ee');
+  lines(['Müavinlər öz şöbə komandalarını quracaq'], 160, 0, 70, '#fff', 0, lt, 900);
+  lines(['4–11-ci sinif şagirdlərindən'], 260, 0, 60, '#facc15', .5, lt, 800);
+  const dp = back(prog(lt, .8, 1.3));
+  const kids = [[4, 220], [5, 390], [6, 560], [7, 730], [8, 1190], [9, 1360], [10, 1530], [11, 1700]], FY = 1000;
+  kids.forEach(([cls, x], k) => { const p = prog(lt, 1.4 + k * .22, 1.8 + k * .22); if (p <= 0) return; const sc = (.58 + (cls - 4) * .055) * 1.4;
+    ctx.save(); ctx.translate(x, FY); const bp = back(p); ctx.scale(bp, bp); person({ x: 0, y: 0, s: sc, ...CROWD[k], face: x < 960 ? 1 : -1, aL: [.2, .1], aR: [.2, .1], bob: Math.abs(Math.sin(t * 3 + k)) * 5 * sc }); ctx.restore();
+    const hy = FY - 198 * sc; pill(`${cls}`, x, hy - 40 * sc - 30, 34, '#e2e8f0', p); });
+  if (dp > 0) { ctx.save(); ctx.translate(960, FY); ctx.scale(dp, dp); person({ x: 0, y: 0, s: 1.5, skin: 1, hair: '#1f2937', face: 0, aL: wave(t, 1), aR: wave(t, 2), bob: Math.abs(Math.sin(t * 3)) * 6 }); ctx.restore(); pill('Müavin', 960, 560, 40, '#22c3ee', clamp(dp)); }
+  text('sinif', 960, 1050, 26, 'rgba(255,255,255,.55)', 600, 'center', prog(lt, 3, 3.4));
+}
+function box(x, y, w, h, title, sub, col, alpha, dashed = false, fill = false) {
+  if (alpha <= 0) return; ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x + w / 2, y + h / 2); const k = lerp(.85, 1, back(alpha)); ctx.scale(k, k); ctx.translate(-(x + w / 2), -(y + h / 2));
+  rr(x, y, w, h, 24); ctx.fillStyle = fill ? hexA(col, .2) : 'rgba(255,255,255,.04)'; ctx.fill(); ctx.setLineDash(dashed ? [14, 10] : []); ctx.strokeStyle = col; ctx.lineWidth = fill ? 5 : 3; ctx.stroke(); ctx.setLineDash([]);
+  text(title, x + w / 2, y + (sub ? h / 2 - 20 : h / 2), 42, '#fff', 800); if (sub) text(sub, x + w / 2, y + h / 2 + 26, 26, '#cbd5e1', 500);
+  ctx.restore();
+}
+function arrow(x1, y1, x2, y2, col, p, both = false) {
+  if (p <= 0) return; const x = lerp(x1, x2, p), y = lerp(y1, y2, p); line(x1, y1, x, y, col, 5);
+  const a = Math.atan2(y2 - y1, x2 - x1), head = (hx, hy, ang) => { ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx - Math.cos(ang - .45) * 22, hy - Math.sin(ang - .45) * 22); ctx.lineTo(hx - Math.cos(ang + .45) * 22, hy - Math.sin(ang + .45) * 22); ctx.closePath(); ctx.fillStyle = col; ctx.fill(); };
+  if (p >= 1) { head(x2, y2, a); if (both) head(x1, y1, a + Math.PI); }
+}
+function sGov(t, lt) {
+  bg(t, '#facc15', 900, 560);
+  lines(['Necə idarə olunacaq?'], 150, 0, 80, '#fff', 0, lt, 900);
+  const ax = '#cbd5e1';
+  box(820, 270, 400, 130, 'Şagird direktor', 'Prosesə nəzarət edir', '#facc15', prog(lt, .4, .9), false, true);
+  box(100, 270, 520, 130, 'Məsul müəllim', 'Elmi Araşdırmalar və İnkişaf Mərkəzi', '#94a3b8', prog(lt, 1.2, 1.7), true);
+  arrow(632, 360, 808, 360, ax, prog(lt, 1.6, 2.0), true); text('məsləhətləşmə', 720, 322, 23, '#cbd5e1', 600, 'center', prog(lt, 1.9, 2.2));
+  const mp = prog(lt, 2.2, 2.7); box(720, 500, 600, 130, '6 müavin', 'Şöbə rəhbərləri', '#22c3ee', mp, false, true);
+    arrow(1020, 405, 1020, 492, ax, prog(lt, 2.5, 2.8)); text('nəzarət', 1045, 450, 26, '#cbd5e1', 600, 'left', prog(lt, 2.7, 3.0));
+  box(620, 730, 800, 130, 'Şöbə komandaları', '4–11-ci sinif şagirdləri', '#22c55e', prog(lt, 3.1, 3.6));
+  arrow(1020, 635, 1020, 722, ax, prog(lt, 3.4, 3.7)); text('komanda qurur', 1045, 680, 26, '#cbd5e1', 600, 'left', prog(lt, 3.6, 3.9));
+  const bp = prog(lt, 4.2, 4.8); if (bp > 0) { ctx.save(); ctx.globalAlpha = bp; ctx.strokeStyle = '#facc15'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(1350, 270); ctx.lineTo(1380, 270); ctx.lineTo(1380, 630); ctx.lineTo(1350, 630); ctx.stroke(); line(1380, 450, 1410, 450, '#facc15', 6); ctx.restore();
+    text('İdarəçilik', 1430, 420, 44, '#facc15', 900, 'left', bp); text('şagirdlərdədir', 1430, 476, 44, '#facc15', 900, 'left', bp); }
+}
+function sRule(t, lt) {
+  bg(t, '#facc15');
+  lines(['İdarəçilik'], 380, 0, 140, '#fff', 0, lt, 900);
+  popText('HUB rəhbəri və müavinlərindədir.', W / 2, 560, 84, '#facc15', .6, lt, 900);
+  lines(['Məsul müəllim məsləhətçidir.'], 720, 0, 54, '#cbd5e1', 1.4, lt, 600);
+}
+
 // timeline: [start, end, fn]
-const TL = [[0, 5, (t) => sHook(t)], [5, 9, (t, l) => sAnswer(t, l)], [9, 13, (t, l) => sLogo(t, l)]];
-for (let i = 0; i < 6; i++) TL.push([13 + i * 5, 18 + i * 5, (t, l) => sDept(t, l, i)]);
-TL.push([43, 49, (t, l) => sYou(t, l)], [49, 53, (t, l) => sGrade(t, l)], [53, 60, (t, l) => sCTA(t, l)]);
+const TL = [[0, 4, (t, l) => sSoon(t, l)], [4, 8, (t, l) => sWhat(t, l)], [8, 11.5, (t, l) => sJoin(t, l)], [11.5, 15.5, (t, l) => sStudents(t, l)],
+  [15.5, 21, (t, l) => sLeader(t, l)], [21, 26.5, (t, l) => sDeputies(t, l)], [26.5, 32, (t, l) => sTeams(t, l)], [32, 39, (t, l) => sGov(t, l)], [39, 43, (t, l) => sRule(t, l)], [43, 47, (t, l) => sLogo(t, l)]];
+const D0 = 47;
+for (let i = 0; i < 6; i++) TL.push([D0 + i * 5, D0 + 5 + i * 5, (t, l) => sDept(t, l, i)]);
+TL.push([77, 82, (t, l) => sYou(t, l)], [82, 86, (t, l) => sGrade(t, l)], [86, 94, (t, l) => sCTA(t, l)]);
 
 function render(t) {
   for (const [a, b, fn] of TL) if (t >= a && t < b) { ctx.save(); fn(t, t - a); ctx.restore(); break; }
   // fade between non-dept scenes
-  for (const [a] of TL) { const d = Math.abs(t - a); if (a > 0 && d < .15 && !(a >= 13 && a < 43)) { ctx.fillStyle = `rgba(10,15,36,${1 - d / .15})`; ctx.fillRect(0, 0, W, H); } }
+  for (const [a] of TL) { const d = Math.abs(t - a); if (a > 0 && d < .15 && !(a >= D0 && a < D0 + 30)) { ctx.fillStyle = `rgba(10,15,36,${1 - d / .15})`; ctx.fillRect(0, 0, W, H); } }
   const fi = 1 - prog(t, 0, .6); if (fi > 0) { ctx.fillStyle = `rgba(0,0,0,${fi})`; ctx.fillRect(0, 0, W, H); }
 }
 window.render = render; window.TOTAL = TOTAL;

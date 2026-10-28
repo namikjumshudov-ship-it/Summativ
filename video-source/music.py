@@ -1,5 +1,5 @@
 import numpy as np, wave
-SR=44100; T=60; BPM=120; beat=60/BPM
+SR=44100; T=94; OFF=1.0; BPM=120; beat=60/BPM
 N=SR*T; L=np.zeros(N); R=np.zeros(N)
 t_all=np.arange(N)/SR
 def add(sig,start,pan=0.0,gain=1.0):
@@ -28,9 +28,10 @@ chords=[[60,64,67],[55,59,62],[57,60,64],[53,57,60]]  # C G Am F
 bass=[36,31,33,29]
 bar=4*beat
 np.random.seed(1)
-for b in range(int(T/bar)):
-    st=b*bar; ch=chords[b%4]
-    full = 9<=st<53; build = 5<=st<9; outro = st>=53
+for b in range(-1,int(T/bar)):
+    st=OFF+b*bar; ch=chords[b%4]
+    if st<0: st=0
+    full = (5<=st<39) or (43<=st<86); build = 39<=st<43; outro = st>=86
     # pad
     for m in ch:
         n=int(bar*SR); tt=np.arange(n)/SR
@@ -58,11 +59,11 @@ for b in range(int(T/bar)):
             add(hat(),st+k*beat/4,gain=.4+.6*k/16)
 # riser + snare roll into drop at 9s
 n=int(4*SR); tt=np.arange(n)/SR; noise=np.random.randn(n)*(tt/4)**2*.25
-add(noise,5)
+add(noise,39)
 for i in range(32):
-    tpos=5+4*(1-(1-i/32)**1.6); add(clap(),tpos,gain=.15+.5*i/32)
+    tpos=39+4*(1-(1-i/32)**1.6); add(clap(),tpos,gain=.15+.5*i/32)
 # impact at drop and at CTA
-for at in (9,53):
+for at in (5,43,86):
     add(kick(),at,gain=1.2); n=int(2*SR); tt=np.arange(n)/SR; add(np.random.randn(n)*np.exp(-tt*2)*.15,at)
 # master
 mix=np.stack([L,R],1)
