@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<title>Zəfər Günü Dəvətnaməsi</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Cinzel:wght@500;700;900&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold-1: #f3dc9a;
+    --gold-2: #c9a24a;
+    --gold-3: #8a6420;
+    --ink: #3b2a12;
+    --paper: #fbf6ea;
+    --az-blue: #00b5e2;
+    --az-red: #ef3340;
+    --az-green: #509e2f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #2b2b2b; }
+  .card {
+    position: relative;
+    width: 1414px;
+    height: 2000px;
+    margin: 0 auto;
+    overflow: hidden;
+    color: var(--ink);
+    font-family: "Cormorant Garamond", Georgia, serif;
+    background:
+      radial-gradient(ellipse 70% 45% at 50% 22%, rgba(255,255,255,.95), rgba(255,255,255,0) 70%),
+      radial-gradient(ellipse 120% 90% at 50% 50%, #fdf9ef 0%, #f6edd6 70%, #ecdcb5 100%);
+  }
+  /* soft paper grain */
+  .card::before {
+    content: ""; position: absolute; inset: 0; opacity: .35; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .45  0 0 0 0 .25  0 0 0 .18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  /* gold frame */
+  .frame-outer, .frame-inner { position: absolute; pointer-events: none; }
+  .frame-outer {
+    inset: 42px;
+    border: 6px solid transparent;
+    border-image: linear-gradient(135deg, var(--gold-3), var(--gold-1) 25%, var(--gold-2) 50%, var(--gold-1) 75%, var(--gold-3)) 1;
+  }
+  .frame-inner {
+    inset: 64px;
+    border: 1.5px solid rgba(160, 120, 45, .7);
+  }
+  .corner { position: absolute; width: 150px; height: 150px; }
+  .corner.tl { top: 50px; left: 50px; }
+  .corner.tr { top: 50px; right: 50px; transform: scaleX(-1); }
+  .corner.bl { bottom: 50px; left: 50px; transform: scaleY(-1); }
+  .corner.br { bottom: 50px; right: 50px; transform: scale(-1,-1); }
+
+  .content {
+    position: relative; z-index: 2;
+    height: 100%;
+    padding: 120px 150px 110px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+
+  .flag-wrap { width: 560px; height: 300px; margin-top: 10px; filter: drop-shadow(0 18px 22px rgba(80, 55, 15, .25)); }
+
+  .gold-text {
+    background: linear-gradient(180deg, #e9c86d 0%, #b8892e 45%, #7d5716 55%, #c99b3e 80%, #f0d58a 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .date-big {
+    font-family: "Cinzel", serif; font-weight: 900;
+    font-size: 170px; line-height: 1; letter-spacing: 6px;
+    margin-top: 34px;
+    filter: drop-shadow(0 3px 0 rgba(255,255,255,.8)) drop-shadow(0 6px 10px rgba(110, 75, 20, .25));
+  }
+  .title {
+    font-family: "Cinzel", serif; font-weight: 500;
+    font-size: 96px; letter-spacing: 18px; line-height: 1.1;
+    color: #5a3e17; margin-top: 6px; padding-left: 18px;
+  }
+
+  .ornament { display: flex; align-items: center; gap: 22px; margin: 40px 0 34px; color: var(--gold-2); }
+  .ornament .line { width: 260px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold-2), transparent); }
+
+  .quote {
+    font-style: italic; font-weight: 600;
+    font-size: 50px; line-height: 1.32; color: #6b4a17;
+    max-width: 1000px;
+  }
+  .quote::before, .quote::after { font-family: "Cinzel", serif; color: var(--gold-2); font-style: normal; font-size: 60px; }
+  .quote::before { content: "“"; margin-right: 6px; }
+  .quote::after  { content: "”"; margin-left: 4px; }
+
+  .invite {
+    font-weight: 500; font-size: 40px; line-height: 1.5; color: var(--ink);
+    max-width: 1060px; margin-top: 46px;
+  }
+  .event-name {
+    display: block;
+    font-family: "Cinzel", serif; font-weight: 700;
+    font-size: 64px; line-height: 1.25; letter-spacing: 2px;
+    margin: 22px 0 18px;
+  }
+  .invite b { font-weight: 700; color: #5a3e17; }
+
+  .details { display: flex; gap: 30px; margin-top: 54px; }
+  .detail {
+    width: 330px; padding: 22px 10px 24px;
+    border: 1.5px solid rgba(170, 128, 50, .8);
+    background: linear-gradient(180deg, rgba(255,255,255,.75), rgba(250,240,215,.65));
+    box-shadow: 0 8px 22px rgba(120, 85, 25, .12), inset 0 0 0 6px rgba(255,255,255,.6), inset 0 0 0 7px rgba(190,150,70,.35);
+  }
+  .detail .label {
+    font-family: "Montserrat", sans-serif; font-weight: 600;
+    font-size: 21px; letter-spacing: 6px; text-transform: uppercase; color: #9a7330;
+  }
+  .detail .value {
+    font-family: "Cinzel", serif; font-weight: 700;
+    font-size: 50px; color: #4a3212; margin-top: 8px;
+  }
+
+  .logo-strip { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .logo-strip img {
+    height: 128px; padding: 12px 22px; background: #fff; border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(100, 70, 20, .15);
+  }
+  .tricolor { display: flex; width: 240px; height: 6px; border-radius: 3px; overflow: hidden; }
+  .tricolor span { flex: 1; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="frame-outer"></div>
+  <div class="frame-inner"></div>
+
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <linearGradient id="g-gold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#8a6420"/><stop offset=".4" stop-color="#f0d58a"/><stop offset="1" stop-color="#a77b2c"/>
+      </linearGradient>
+      <symbol id="corner" viewBox="0 0 150 150">
+        <path d="M6 110 V20 Q6 6 20 6 H110" fill="none" stroke="url(#g-gold)" stroke-width="4"/>
+        <path d="M22 80 V30 Q22 22 30 22 H80" fill="none" stroke="url(#g-gold)" stroke-width="2"/>
+        <path d="M22 22 L52 52" stroke="url(#g-gold)" stroke-width="2"/>
+        <g transform="translate(58 58) rotate(45)"><rect x="-9" y="-9" width="18" height="18" fill="url(#g-gold)"/></g>
+        <circle cx="110" cy="6" r="5" fill="url(#g-gold)"/><circle cx="6" cy="110" r="5" fill="url(#g-gold)"/>
+      </symbol>
+    </defs>
+  </svg>
+  <svg class="corner tl"><use href="#corner"/></svg>
+  <svg class="corner tr"><use href="#corner"/></svg>
+  <svg class="corner bl"><use href="#corner"/></svg>
+  <svg class="corner br"><use href="#corner"/></svg>
+
+  <div class="content">
+    <svg class="flag-wrap" id="flag" viewBox="0 0 560 300"></svg>
+
+    <div class="date-big gold-text">8 NOYABR</div>
+    <div class="title">ZƏFƏR GÜNÜ</div>
+
+    <div class="ornament">
+      <span class="line"></span>
+      <svg width="64" height="64" viewBox="-32 -32 64 64"><g fill="url(#g-gold)" id="star8"></g></svg>
+      <span class="line"></span>
+    </div>
+
+    <p class="quote">Zəfər birliyimizin, inamımızın və Vətənə sevgimizin təntənəsidir!</p>
+
+    <p class="invite">
+      Sizi «Kaspi» liseyi şagirdlərinin təqdimatında hazırlanan
+      <span class="event-name gold-text">«QƏHRƏMANLIQDAN DOĞAN ZƏFƏR»</span>
+      adlı tədbirə dəvət edirik. <b>Zəfər Günü</b> və <b>Dövlət Bayrağı Günü</b>nə
+      həsr olunan tədbirimizdə iştirakınız bizləri məmnun edəcək.
+    </p>
+
+    <div class="details">
+      <div class="detail"><div class="label">Tarix</div><div class="value">06.11.2026</div></div>
+      <div class="detail"><div class="label">Saat</div><div class="value">14:20</div></div>
+    </div>
+
+    <div class="logo-strip">
+      <div class="tricolor"><span style="background:var(--az-blue)"></span><span style="background:var(--az-red)"></span><span style="background:var(--az-green)"></span></div>
+      <img src="logo.png" alt="Kaspi liseyi · Cambridge International School">
+    </div>
+  </div>
+</div>
+
+<script>
+  // 8-pointed star (two overlapping squares, as on the Azerbaijani flag)
+  function star8(r, inner) {
+    const pts = [];
+    for (let i = 0; i < 16; i++) {
+      const a = Math.PI / 8 * i - Math.PI / 2;
+      const rr = i % 2 ? inner : r;
+      pts.push((rr * Math.cos(a)).toFixed(2) + "," + (rr * Math.sin(a)).toFixed(2));
+    }
+    return pts.join(" ");
+  }
+  document.getElementById("star8").innerHTML = `<polygon points="${star8(30, 19)}"/>`;
+
+  // Waving flag built from sine-displaced stripes
+  (function () {
+    const svg = document.getElementById("flag");
+    const NS = "http://www.w3.org/2000/svg";
+    const x0 = 40, w = 480, top = 40, h = 220, amp = 14, k = 2 * Math.PI / 300;
+    const wave = x => amp * Math.sin(k * (x - x0) + 0.6) * (0.35 + 0.65 * (x - x0) / w);
+    const edge = (y, dir) => {
+      const p = [];
+      for (let i = 0; i <= 60; i++) {
+        const t = dir > 0 ? i / 60 : 1 - i / 60;
+        const x = x0 + t * w;
+        p.push(`${x.toFixed(1)},${(y + wave(x)).toFixed(1)}`);
+      }
+      return p;
+    };
+    const band = (y1, y2, color) => {
+      const d = "M" + edge(y1, 1).join(" L") + " L" + edge(y2, -1).join(" L") + " Z";
+      return `<path d="${d}" fill="${color}"/>`;
+    };
+    const s = h / 3;
+    let shade = `<defs>
+      <linearGradient id="fshade" x1="0" x2="1">`;
+    for (let i = 0; i <= 20; i++) {
+      const x = x0 + i / 20 * w;
+      const slope = Math.cos(k * (x - x0) + 0.6);
+      const o = (0.18 * slope).toFixed(3);
+      shade += slope > 0
+        ? `<stop offset="${i / 20}" stop-color="#fff" stop-opacity="${o}"/>`
+        : `<stop offset="${i / 20}" stop-color="#000" stop-opacity="${(-o)}"/>`;
+    }
+    shade += `</linearGradient>
+      <linearGradient id="pole" x1="0" x2="1"><stop offset="0" stop-color="#7a5a1c"/><stop offset=".45" stop-color="#f3dc9a"/><stop offset="1" stop-color="#8a6420"/></linearGradient>
+      <clipPath id="fclip">${band(top, top + h, "#000")}</clipPath>
+    </defs>`;
+    const cx = x0 + w / 2, cy = top + h / 2 + wave(x0 + w / 2);
+    svg.innerHTML = shade +
+      `<rect x="${x0 - 14}" y="${top - 26}" width="12" height="270" rx="3" fill="url(#pole)"/>
+       <circle cx="${x0 - 8}" cy="${top - 30}" r="11" fill="url(#pole)"/>
+       ${band(top, top + s, "var(--az-blue)")}
+       ${band(top + s, top + 2 * s, "var(--az-red)")}
+       ${band(top + 2 * s, top + h, "var(--az-green)")}
+       <g transform="translate(${cx} ${cy})">
+         <circle cx="-8" cy="0" r="30" fill="#fff"/>
+         <circle cx="0" cy="0" r="25" fill="var(--az-red)"/>
+         <polygon transform="translate(30 0) rotate(22.5)" points="${star8(14, 8.5)}" fill="#fff"/>
+       </g>
+       <rect x="${x0}" y="${top - amp - 2}" width="${w}" height="${h + 2 * amp + 4}" fill="url(#fshade)" clip-path="url(#fclip)"/>`;
+  })();
+</script>
+</body>
+</html>
