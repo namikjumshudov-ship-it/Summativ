@@ -107,10 +107,24 @@
   .tricolor { display: flex; width: 240px; height: 7px; border-radius: 4px; overflow: hidden; }
   .tricolor span { flex: 1; }
   .footer img { height: 112px; }
+
+  /* hero soldier + mountains backdrop */
+  .rays { position: absolute; left: 50%; top: 430px; width: 2000px; height: 2000px; transform: translate(-50%, -50%); opacity: .5;
+    background: repeating-conic-gradient(from 0deg, rgba(0,160,224,.10) 0deg 6deg, rgba(0,160,224,0) 6deg 15deg);
+    -webkit-mask: radial-gradient(circle, #000 0%, transparent 55%); mask: radial-gradient(circle, #000 0%, transparent 55%); }
+  .soldier { position: absolute; right: -40px; top: 500px; width: 1050px; opacity: .19;
+    -webkit-mask: linear-gradient(180deg, #000 55%, transparent 92%); mask: linear-gradient(180deg, #000 55%, transparent 92%); }
+  .mountains { position: absolute; left: 0; bottom: 0; width: 100%; height: 420px; }
 </style>
 </head>
 <body>
 <div class="card">
+  <div class="rays"></div>
+  <img class="soldier" src="soldier.svg" alt="">
+  <svg class="mountains" viewBox="0 0 1414 420" preserveAspectRatio="none">
+    <path d="M0 260 L160 170 L260 230 L420 110 L560 220 L700 150 L860 250 L1000 140 L1140 230 L1280 160 L1414 220 L1414 420 L0 420 Z" fill="#00a0e0" opacity=".08"/>
+    <path d="M0 330 L200 250 L340 300 L520 220 L700 310 L880 240 L1060 320 L1240 250 L1414 300 L1414 420 L0 420 Z" fill="#0057a6" opacity=".08"/>
+  </svg>
   <div class="page p1"></div><div class="page p2"></div><div class="page p3"></div><div class="page p4"></div>
   <div class="frame"></div>
   <div class="frame-inner"></div>
